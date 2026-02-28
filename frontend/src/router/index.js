@@ -22,7 +22,7 @@ const router = createRouter({
         { path: 'dashboard', name: 'dashboard', component: Dashboard },
         { path: 'vault', name: 'vault', component: Vault },
         { path: 'letters', name: 'letters', component: Letters },
-        { path: 'executor', name: 'executor', component: Executor } // <-- 2. Moved inside the layout
+        { path: 'executor', name: 'executor', component: Executor } 
       ]
     }
   ]

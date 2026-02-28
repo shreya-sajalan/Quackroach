@@ -5,7 +5,14 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          // Tell Vue to ignore ion-icon tags
+          isCustomElement: (tag) => tag === 'ion-icon'
+        }
+      }
+    }),
     tailwindcss(),
   ],
   resolve: {
