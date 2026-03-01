@@ -1,0 +1,21 @@
+# --- Core Django & Async ---
+asgiref==3.11.1
+Django==5.2.11
+sqlparse==0.5.5
+tzdata==2025.3
+packaging==26.0
+
+# --- APIs & Authentication ---
+django-cors-headers==4.9.0
+djangorestframework==3.16.1
+djangorestframework-simplejwt==5.5.1
+PyJWT==2.11.0
+
+# --- Environment Management ---
+python-dotenv==1.2.1
+
+# --- Server / Deployment (Render Essentials) ---
+gunicorn==25.1.0
+psycopg2-binary>=2.9.9
+dj-database-url>=2.1.0
+whitenoise>=6.6.0
