@@ -14,6 +14,8 @@ from .models import Vault
 from .serializers import VaultSerializer
 from rest_framework.views import APIView
 from .models import Vault, Letter, Executor
+from rest_framework.parsers import MultiPartParser, FormParser
+
 
 User = get_user_model()
 
@@ -147,3 +149,23 @@ class ExecutorView(APIView):
             }
         )
         return Response({"message": "Executor assigned successfully"}, status=status.HTTP_201_CREATED)
+    
+class ExecutorVerificationView(APIView):
+    # This must be AllowAny because the Executor doesn't have a user account yet
+    permission_classes = [AllowAny] 
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            executor = Executor.objects.get(email=email, status='Verification_Pending')
+            
+            if 'document' in request.FILES:
+                executor.verification_document = request.FILES['document']
+                executor.is_verified = False # Admin must manually verify this in Admin Panel
+                executor.save()
+                return Response({"message": "Documents uploaded. Admin will verify shortly."}, status=status.HTTP_200_OK)
+            
+            return Response({"error": "No document provided"}, status=status.HTTP_400_BAD_REQUEST)
+        except Executor.DoesNotExist:
+            return Response({"error": "Invalid request or unauthorized email."}, status=status.HTTP_404_NOT_FOUND)

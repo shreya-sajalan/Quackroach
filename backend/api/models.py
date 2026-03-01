@@ -88,9 +88,9 @@ class Executor(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     relationship = models.CharField(max_length=100)
-    
+    verification_document = models.FileField(upload_to='verification_docs/', blank=True, null=True)
     # Statuses: 'Active' (Alive), 'Verification_Pending' (Triggered), 'Access_Granted' (Confirmed)
-    status = models.CharField(max_length=50, default='Active') 
+    status = models.CharField(max_length=50, default='Active')
     is_verified = models.BooleanField(default=False) 
     created_at = models.DateTimeField(auto_now_add=True)
 

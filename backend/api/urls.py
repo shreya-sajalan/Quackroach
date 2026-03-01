@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import LetterView, LoginView, RegisterUserView, VaultView ,ExecutorView
+from .views import ExecutorVerificationView, LetterView, LoginView, RegisterUserView, VaultView ,ExecutorView
 
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('vault/', VaultView.as_view(), name='vault'),
     path('letters/', LetterView.as_view(), name='letters'),
     path('executor/', ExecutorView.as_view(), name='executor'),
+    path('verify-executor/', ExecutorVerificationView.as_view(), name='verify_executor'),
 ]

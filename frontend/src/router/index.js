@@ -10,7 +10,7 @@ import Addvault from '../views/Addvault.vue'
 import Letters from '../views/Letters.vue'
 import Executor from '../views/Executor.vue'
 import AddLetter from '../views/AddLetter.vue'
-
+import ExecutorPortal from '../views/ExecutorPortal.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +18,9 @@ const router = createRouter({
     // --- Public Routes ---
     { path: '/', name: 'home', component: LandingPage },
     { path: '/login', name: 'login', component: Auth },
+    
+    // --- Executor Verification Portal ---
+    { path: '/executor-portal', name: 'executor-portal', component: ExecutorPortal },
     
     // --- App Routes (Wrapped in your Navbar layout) ---
     {
@@ -29,7 +32,8 @@ const router = createRouter({
         { path: 'addvault', name: 'addvault', component: Addvault }, 
         { path: 'letters', name: 'letters', component: Letters },
         { path: 'add-letter', name: 'add-letter', component: AddLetter },
-        { path: 'executor', name: 'executor', component: Executor }
+        { path: 'executor', name: 'executor', component: Executor },
+        { path: 'executor/:id', name: 'executor-detail', component: Executor, props: true },
       ]
     }
   ]
