@@ -104,11 +104,17 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+CORS_ALLOW_ALL_ORIGINS = False 
+
+# 2. Explicitly list the exact URLs allowed to talk to your backend
 CORS_ALLOWED_ORIGINS = [
+    # Keep these so you can still test locally on your Arch machine
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    
+    # Add your LIVE frontend URL here once you deploy it!
+    "https://endura-phi.vercel.app/", 
 ]
-
 # --- STATIC & MEDIA FILES ---
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # CRITICAL FOR RENDER BUILD
