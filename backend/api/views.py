@@ -1,4 +1,4 @@
-from .serializers import UserRegistrationSerializer
+from .serializers import LetterSerializer, UserRegistrationSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
@@ -26,14 +26,6 @@ class CustomLoginSerializer(TokenObtainPairSerializer):
             'full_name': self.user.full_name,
         }
         return data
-    
-@api_view(['GET'])
-def test_vault_data(request):
-    mock_data = [
-        {"id": 1, "title": "Chase Savings", "value": "$24,500", "type": "Bank"},
-        {"id": 2, "title": "Life Insurance", "value": "$500,000", "type": "Insurance"},
-    ]
-    return Response({"message": "Connection successful!", "vault_items": mock_data})
 
 class RegisterUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -109,4 +101,19 @@ class VaultView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
             
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class LetterView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        letters = Letter.objects.filter(user=request.user)
+        serializer = LetterSerializer(letters, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = LetterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

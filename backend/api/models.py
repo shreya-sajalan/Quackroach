@@ -72,8 +72,7 @@ class Vault(models.Model):
 class Letter(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    
-    # Zero-Knowledge fields (just like the Vault!)
+    recipient = models.CharField(max_length=255)
     ciphertext = models.TextField(blank=True, null=True)
     iv = models.CharField(max_length=255, blank=True, null=True)
     salt = models.CharField(max_length=255, blank=True, null=True)
