@@ -31,10 +31,16 @@ Endura gives users a secure, guided vault to document all their assets, accounts
 ### Technologies/Components Used
 
 **For Software:**
-- **Languages:** Python, JavaScript, HTML, CSS
 - **Libraries:** Django REST Framework, Axios, Vue Router, Pinia, ReportLab (PDF generation)
 - **Tools:** VS Code, Git, Postman, pip, npm
 - **Security:** AES Encryption for all vault data, document-verified death confirmation
+- **Frontend**: Vue.js
+- **Backend**: Django + Django REST Framework
+- **Crypto**: Web Crypto API (browser native)
+- **Key Derivation**: PBKDF2 (250k+ iterations) or Argon2 (preferred)
+- **Encryption Mode**: AES-256-GCM
+- **Transport**: HTTPS only
+
 
 ---
 
@@ -55,7 +61,7 @@ Endura gives users a secure, guided vault to document all their assets, accounts
 #### Installation
 ```
 # Clone the repository
-git clone https://github.com/your-username/endura.git
+git clone https://github.com/shreya-sajalan/endura.git
 cd endura
 
 # Backend setup
@@ -87,13 +93,16 @@ npm run dev
 
 #### Screenshots (Add at least 3)
 
-![WhatsApp Image 2026-02-28 at 9 39 17 PM (1)](https://github.com/user-attachments/assets/89645d86-5186-4ce9-9cd0-77cd75ad6010)
-![WhatsApp Image 2026-02-28 at 9 39 17 PM](https://github.com/user-attachments/assets/e8510cc8-32eb-44e2-88e8-605854af11a5)
-![WhatsApp Image 2026-02-28 at 9 39 16 PM (2)](https://github.com/user-attachments/assets/38b325f9-d698-47d1-bd16-672fb59888dc)
-![WhatsApp Image 2026-02-28 at 9 39 16 PM (1)](https://github.com/user-attachments/assets/8f93de07-a09f-4129-b5e7-548c5f70df3d)
-![WhatsApp Image 2026-02-28 at 9 39 16 PM](https://github.com/user-attachments/assets/13ac82fc-1a30-49f6-82d6-3e26ce9d587e)
-![WhatsApp Image 2026-02-28 at 9 39 15 PM (1)](https://github.com/user-attachments/assets/d5c9f4ff-a077-42a7-bd46-8fbe45f72631)
-![WhatsApp Image 2026-02-28 at 9 39 15 PM](https://github.com/user-attachments/assets/b68ee457-fa65-4d2c-afbf-cdfd99e745e4)
+![endura 1](https://github.com/user-attachments/assets/d5f0521f-f037-480f-bcd1-0c65d04edb5c)
+![endura 2](https://github.com/user-attachments/assets/230b98dd-71a5-4f83-b48a-50a65a0a7ada)
+![endura 3](https://github.com/user-attachments/assets/82469e78-ca48-4318-a0f2-d0114a69ad0e)
+![endura 4](https://github.com/user-attachments/assets/cbc6cd0f-5afc-4f54-b7fb-9ad4edffa5d6)
+![endura 5](https://github.com/user-attachments/assets/e44fec4a-5db2-440b-ab06-fe1a40689d09)
+![endura 6](https://github.com/user-attachments/assets/ab0758d6-93a0-4765-ba53-6b0ece116fbc)
+![endura 7](https://github.com/user-attachments/assets/28c6e1f2-d1de-41ad-a186-efbd65c5daba)
+![endura 8](https://github.com/user-attachments/assets/707a3497-6a21-42f3-8fad-9a8ecac1fec6)
+![endura 9](https://github.com/user-attachments/assets/2295b4fe-8351-4b69-bac5-1dea19964560)
+![endura 10](https://github.com/user-attachments/assets/e1f59852-b390-466b-b276-a6f116291b2c)
 
 ---
 
@@ -121,26 +130,14 @@ npm run dev
 
 ### Video
 
-https://github.com/user-attachments/assets/66205ea5-550b-4197-96cb-3369426b0d6f
+https://github.com/user-attachments/assets/53e36349-01c7-44d2-b8c7-f14b007c1ff8
 
 ---
 
 ## Team Contributions
 
-- Sherya Shajalan: Builded main features and other features
-- Elna Susan: UI/UX designing and basic implementaion of it and other features
-
----
-
-## License
-
-This project is licensed under the [LICENSE_NAME] License - see the [LICENSE](LICENSE) file for details.
-
-**Common License Options:**
-- MIT License (Permissive, widely used)
-- Apache 2.0 (Permissive with patent grant)
-- GPL v3 (Copyleft, requires derivative works to be open source)
-
+- Shreya Sajalan:  UI/UX designing and documentation
+- Elna Susan: Builded main features like Backend and Frontend
 ---
 
 Made with ❤️ at TinkerHub
