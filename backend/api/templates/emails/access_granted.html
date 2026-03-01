@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { margin: 0; padding: 0; background-color: #f4f4f7; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #f4f4f7; padding-bottom: 40px; }
+        .main { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; color: #1a1a1a; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .header { background-color: #12141c; padding: 40px; text-align: center; color: #E5B869; }
+        .content { padding: 40px 30px; line-height: 1.6; }
+        .action-card { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 25px; margin: 25px 0; }
+        .btn { background-color: #E5B869; color: #0e1016 !important; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; transition: background 0.3s; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; }
+        .divider { border-top: 1px solid #eee; margin: 20px 0; }
+        .status-badge { background-color: #d1fae5; color: #065f46; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <table class="main">
+            <tr>
+                <td class="header">
+                    <h1 style="margin: 0; letter-spacing: 4px; font-weight: 300;">ENDURA</h1>
+                    <p style="margin: 5px 0 0; font-size: 12px; text-transform: uppercase; opacity: 0.8;">Legacy Access Authorization</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="content">
+                    <span class="status-badge">Identity Verified</span>
+                    <h2 style="margin-top: 15px; color: #12141c;">Verification Complete</h2>
+                    <p>Dear {{ executor_name }},</p>
+                    <p>The verification process for the digital estate of <strong>{{ user_name }}</strong> has been formally approved. All administrative restrictions have been lifted from your profile.</p>
+                    
+                    <div class="action-card">
+                        <p style="margin-top: 0; font-weight: bold; color: #12141c;">Handover Summary:</p>
+                        <table width="100%" style="font-size: 14px;">
+                            <tr>
+                                <td style="padding: 5px 0; color: #6b7280;">Login Identity:</td>
+                                <td style="padding: 5px 0; font-weight: 600;">{{ login_email }}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #6b7280;">Authorization:</td>
+                                <td style="padding: 5px 0; font-weight: 600;">Full Access Granted</td>
+                            </tr>
+                        </table>
+                        <div class="divider"></div>
+                        <p style="font-size: 13px; margin-bottom: 0;">To proceed, you will require the <strong>Vault Password</strong> (Shared Secret) provided to you by the account owner. This password is required to decrypt the locally stored files.</p>
+                    </div>
+
+                    <div style="text-align: center; padding-top: 10px;">
+                        <a href="{{ site_url }}" class="btn">Unlock Legacy Vault</a>
+                    </div>
+
+                    <p style="margin-top: 30px; font-size: 13px; color: #9ca3af; font-style: italic;">
+                        This is a secure transmission. If you did not expect this authorization, please secure this email and contact our security team immediately.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="footer">
+                    &copy; 2026 Endura Digital Legacy Systems. <br>
+                    Secure. Private. Forever.
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
