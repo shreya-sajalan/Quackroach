@@ -12,10 +12,11 @@ const formData = ref({
 const isLoading = ref(true)
 const isSaving = ref(false)
 
+// This should GET the data when the page loads
 const fetchExecutor = async () => {
   try {
     const token = localStorage.getItem('access_token')
-    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/executor/`, formData.value, {
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/executor/`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     executor.value = res.data
@@ -26,13 +27,15 @@ const fetchExecutor = async () => {
   }
 }
 
+// This should POST the data when you click the button
 const handleAssign = async () => {
   isSaving.value = true
   try {
     const token = localStorage.getItem('access_token')
-    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/executor/`, {
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/executor/`, formData.value, {
       headers: { Authorization: `Bearer ${token}` }
     })
+    // After successfully saving, fetch the new data to update the UI
     await fetchExecutor()
   } catch (e) {
     console.error("Assignment failed", e)
