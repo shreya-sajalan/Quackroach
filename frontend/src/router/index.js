@@ -11,6 +11,7 @@ import Letters from '../views/Letters.vue'
 import Executor from '../views/Executor.vue'
 import AddLetter from '../views/AddLetter.vue'
 import ExecutorPortal from '../views/ExecutorPortal.vue'
+import UnlockLegacy from '../views/UnlockLegacy.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,7 +22,11 @@ const router = createRouter({
     
     // --- Executor Verification Portal ---
     { path: '/executor-portal', name: 'executor-portal', component: ExecutorPortal },
-    
+    { 
+    path: '/unlock-legacy', 
+    name: 'unlock-legacy', 
+    component: UnlockLegacy 
+    },
     // --- App Routes (Wrapped in your Navbar layout) ---
     {
       path: '/',

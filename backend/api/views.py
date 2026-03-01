@@ -169,3 +169,37 @@ class ExecutorVerificationView(APIView):
             return Response({"error": "No document provided"}, status=status.HTTP_400_BAD_REQUEST)
         except Executor.DoesNotExist:
             return Response({"error": "Invalid request or unauthorized email."}, status=status.HTTP_404_NOT_FOUND)
+
+class LegacyDataView(APIView):
+    # AllowAny because the executor does not have a standard user login token
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        executor_email = request.data.get('executor_email')
+        target_email = request.data.get('target_email')
+
+        if not executor_email or not target_email:
+            return Response({"error": "Both executor and target emails are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            target_user = User.objects.get(email=target_email)
+            
+            # Strict security check: Ensure status is Access_Granted and is_verified is True
+            executor = Executor.objects.get(
+                email=executor_email, 
+                user=target_user,
+                status='Access_Granted',
+                is_verified=True
+            )
+        except (User.DoesNotExist, Executor.DoesNotExist):
+            return Response({"error": "Access denied. Verification incomplete or records not found."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Fetch the encrypted items
+        vault_items = Vault.objects.filter(user=target_user).values('id', 'item_count', 'ciphertext', 'iv', 'salt')
+        letters = Letter.objects.filter(user=target_user).values('id', 'recipient', 'ciphertext', 'iv', 'salt')
+
+        return Response({
+            "message": "Access granted. Data ready for local decryption.",
+            "vault_items": list(vault_items),
+            "letters": list(letters)
+        }, status=status.HTTP_200_OK)

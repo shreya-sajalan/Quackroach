@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ExecutorVerificationView, LetterView, LoginView, RegisterUserView, VaultView ,ExecutorView
+from .views import ExecutorVerificationView, LetterView, LoginView, LegacyDataView, RegisterUserView, VaultView ,ExecutorView
 
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('letters/', LetterView.as_view(), name='letters'),
     path('executor/', ExecutorView.as_view(), name='executor'),
     path('verify-executor/', ExecutorVerificationView.as_view(), name='verify_executor'),
+    path('legacy-data/', LegacyDataView.as_view(), name='legacy_data'),
 ]
