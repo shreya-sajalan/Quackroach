@@ -1,13 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router' // Import the router for redirection
+import { useRouter } from 'vue-router' 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-const router = useRouter() // Initialize the router
+const router = useRouter() 
 
 // UI State
 const activeTab = ref('signin') // Controls which tab is active
@@ -34,7 +34,7 @@ const handleLogin = async () => {
   try {
     // 2. Send the POST request to Django
     // Note: If you are using standard SimpleJWT, this endpoint might be '/api/token/' instead of '/api/login/'
-    const response = await axios.post('http://127.0.0.1:8000/api/login/', {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/login/`, {
       email: loginEmail.value,
       password: loginPassword.value
     })
@@ -74,7 +74,7 @@ const handleSignup = async () => {
 
   try {
     // 2. Send the POST request to Django
-    const response = await axios.post('http://127.0.0.1:8000/api/register/', {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/register/`, {
       full_name: signupName.value, 
       email: signupEmail.value,
       password: signupPassword.value
