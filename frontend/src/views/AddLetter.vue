@@ -50,7 +50,7 @@ const handleSaveLetter = async () => {
     const encrypted = await encryptLetter(vaultPassword.value, content.value)
     const token = localStorage.getItem('access_token')
     
-    await axios.post('http://127.0.0.1:8000/api/letters/', {
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/letters/`, {
       recipient: recipient.value,
       ...encrypted
     }, { headers: { Authorization: `Bearer ${token}` } })

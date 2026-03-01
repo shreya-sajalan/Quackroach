@@ -15,7 +15,7 @@ const isSaving = ref(false)
 const fetchExecutor = async () => {
   try {
     const token = localStorage.getItem('access_token')
-    const res = await axios.get('http://127.0.0.1:8000/api/executor/', {
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/executor/`, formData.value, {
       headers: { Authorization: `Bearer ${token}` }
     })
     executor.value = res.data
@@ -30,7 +30,7 @@ const handleAssign = async () => {
   isSaving.value = true
   try {
     const token = localStorage.getItem('access_token')
-    await axios.post('http://127.0.0.1:8000/api/executor/', formData.value, {
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/executor/`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     await fetchExecutor()

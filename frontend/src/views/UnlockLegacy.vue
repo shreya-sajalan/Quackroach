@@ -83,7 +83,7 @@ const unlockVault = async () => {
 
   try {
     // Fetch encrypted data from backend
-    const response = await axios.post('http://127.0.0.1:8000/api/legacy-data/', {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/legacy-data/`, {
       executor_email: executorEmail.value,
       target_email: targetEmail.value
     })

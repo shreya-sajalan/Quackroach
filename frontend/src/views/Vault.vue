@@ -113,7 +113,7 @@ onMounted(async () => {
   }
 
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/vault/', {
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/vault/`, {
       headers: { Authorization: `Bearer ${token}` }
     })
 
@@ -159,7 +159,7 @@ const handleSetup = async () => {
     const encryptedPackage = await encryptVault(vaultPassword.value, initialData)
     const token = localStorage.getItem('access_token')
 
-    await axios.post('http://127.0.0.1:8000/api/vault/', encryptedPackage, {
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/vault/`, encryptedPackage, {
       headers: { Authorization: `Bearer ${token}` }
     })
 
@@ -205,7 +205,7 @@ const confirmDelete = async () => {
     const token = localStorage.getItem('access_token')
     
     // 3. Save the newly encrypted package back to Django
-    await axios.post('http://127.0.0.1:8000/api/vault/', encryptedPackage, {
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/vault/`, encryptedPackage, {
       headers: { Authorization: `Bearer ${token}` }
     })
 

@@ -20,7 +20,7 @@ const submitVerification = async () => {
   formData.append('document', file.value)
 
   try {
-    await axios.post('http://127.0.0.1:8000/api/verify-executor/', formData)
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/verify-executor/`, formData)
     statusMsg.value = "Documents submitted successfully. You will be notified once access is granted."
   } catch (e) {
     statusMsg.value = "Verification failed. Please ensure the email matches the one in our records."

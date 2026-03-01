@@ -170,7 +170,7 @@ const handleSave = async () => {
     const token = localStorage.getItem('access_token')
     
     // 1. Fetch the existing encrypted vault
-    const getRes = await axios.get('http://127.0.0.1:8000/api/vault/', { headers: { Authorization: `Bearer ${token}` }})
+    const getRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/vault/`, { headers: { Authorization: `Bearer ${token}` }})
     
     let currentData = { items: [] }
     
@@ -195,7 +195,7 @@ const handleSave = async () => {
     const encryptedPackage = await encryptVault(vaultPassword.value, currentData)
     encryptedPackage.item_count = currentData.items.length
     // 5. Save back to Django
-    await axios.post('http://127.0.0.1:8000/api/vault/', encryptedPackage, { headers: { Authorization: `Bearer ${token}` }})
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/vault/`, encryptedPackage, { headers: { Authorization: `Bearer ${token}` }})
 
     router.push('/vault')
   } catch (error) {
