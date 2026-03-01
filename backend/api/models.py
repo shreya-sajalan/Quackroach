@@ -63,7 +63,36 @@ class Vault(models.Model):
     ciphertext = models.TextField()
     iv = models.CharField(max_length=255)
     salt = models.CharField(max_length=255)
+    item_count = models.IntegerField(default=0)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Encrypted Vault for {self.user.email}"
+    
+class Letter(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    
+    # Zero-Knowledge fields (just like the Vault!)
+    ciphertext = models.TextField(blank=True, null=True)
+    iv = models.CharField(max_length=255, blank=True, null=True)
+    salt = models.CharField(max_length=255, blank=True, null=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Letter: {self.title} (by {self.user.email})"
+
+class Executor(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    relationship = models.CharField(max_length=100, blank=True, null=True)
+    
+    # Status can be 'Pending', 'Active', or 'Declined'
+    status = models.CharField(max_length=50, default='Pending') 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Executor: {self.name} for {self.user.email}"

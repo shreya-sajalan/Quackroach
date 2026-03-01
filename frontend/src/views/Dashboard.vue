@@ -23,27 +23,23 @@ const dashoffset = computed(() => {
 // 3. Fetch real data from Django when the dashboard loads
 onMounted(async () => {
   try {
-    // Retrieve the auth token from local storage
     const token = localStorage.getItem('access_token') 
     
-    // SECURITY CHECK: Kick back to login if no token exists
     if (!token) {
       router.push('/login')
       return
     }
     
-    // Call your Django API
     const response = await axios.get('http://127.0.0.1:8000/api/dashboard/', {
       headers: {
         Authorization: `Bearer ${token}` 
       }
     })
 
-    // Inject the real data into the reactive variables
     const data = response.data
     user.value.fullname = data.fullname
     completionPercentage.value = data.completionPercentage
-    vaultItemsCount.value = data.vaultItemsCount
+    vaultItemsCount.value = data.vaultItemsCount // <--- This is ready for real data!
     lettersCount.value = data.lettersCount
     hasExecutor.value = data.hasExecutor
     lastCheckIn.value = data.lastCheckIn
@@ -51,7 +47,6 @@ onMounted(async () => {
   } catch (error) {
     console.error("Failed to load dashboard data:", error)
     
-    // SECURITY CHECK: If the token is invalid or expired, clear it and force re-login
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
@@ -66,10 +61,10 @@ onMounted(async () => {
     
     <header class="mb-12 border-b border-gray-800 pb-6">
       <h1 class="text-4xl font-serif font-bold text-white mb-2">
-        Good to see you, {{ user.fullname }} 👋
+        Good to see you, {{ user.fullname }}
       </h1>
       <p class="text-gray-400 text-lg">
-        Welcome to your AfterMe dashboard. Your legacy is currently <span class="text-[#E5B869] font-medium">{{ completionPercentage }}%</span> secured.
+        Welcome to your Endura dashboard. Your legacy is currently <span class="text-[#E5B869] font-medium">{{ completionPercentage }}%</span> secured.
       </p>
     </header>
 
@@ -99,7 +94,7 @@ onMounted(async () => {
       
       <div class="bg-[#12141c] border border-gray-800 rounded-2xl p-6 shadow-lg hover:border-gray-700 hover:shadow-xl transition-all">
         <div class="flex items-center space-x-3 text-gray-400 mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#E5B869]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <ion-icon name="shield-checkmark-outline" class="text-2xl text-[#E5B869]"></ion-icon>
           <span class="text-sm font-medium tracking-wide">Vault Items</span>
         </div>
         <div class="text-4xl font-serif font-bold text-white">{{ vaultItemsCount }}</div>
@@ -107,7 +102,7 @@ onMounted(async () => {
       
       <div class="bg-[#12141c] border border-gray-800 rounded-2xl p-6 shadow-lg hover:border-gray-700 hover:shadow-xl transition-all">
         <div class="flex items-center space-x-3 text-gray-400 mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#E5B869]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10"/><path d="M9 18l3-3-3-3"/></svg>
+          <ion-icon name="document-text-outline" class="text-2xl text-[#E5B869]"></ion-icon>
           <span class="text-sm font-medium tracking-wide">Letters Written</span>
         </div>
         <div class="text-4xl font-serif font-bold text-white">{{ lettersCount }}</div>
@@ -115,7 +110,7 @@ onMounted(async () => {
 
       <div class="bg-[#12141c] border border-gray-800 rounded-2xl p-6 shadow-lg hover:border-gray-700 hover:shadow-xl transition-all">
         <div class="flex items-center space-x-3 text-gray-400 mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#E5B869]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          <ion-icon name="person-add-outline" class="text-2xl text-[#E5B869]"></ion-icon>
           <span class="text-sm font-medium tracking-wide">Executor Assigned</span>
         </div>
         <div class="text-3xl font-serif font-bold text-white mt-1">{{ hasExecutor }}</div>
@@ -123,7 +118,7 @@ onMounted(async () => {
 
       <div class="bg-[#12141c] border border-gray-800 rounded-2xl p-6 shadow-lg hover:border-gray-700 hover:shadow-xl transition-all">
         <div class="flex items-center space-x-3 text-gray-400 mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#E5B869]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <ion-icon name="time-outline" class="text-2xl text-[#E5B869]"></ion-icon>
           <span class="text-sm font-medium tracking-wide">Last Check-in</span>
         </div>
         <div class="text-2xl font-serif font-bold text-white mt-2">{{ lastCheckIn }}</div>

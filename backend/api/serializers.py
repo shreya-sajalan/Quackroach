@@ -24,4 +24,4 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class VaultSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vault
-        fields = ["ciphertext", "iv", "salt"]
+        fields = ["ciphertext", "iv", "salt","item_count"]

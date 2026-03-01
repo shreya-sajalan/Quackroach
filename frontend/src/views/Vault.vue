@@ -15,7 +15,14 @@ const vaultItems = ref([])
 // Raw encrypted data from Django
 const encryptedPayload = ref(null)
 
-// --- Safe Base64 Helpers (Prevents Call Stack Limits on Large Decryptions) ---
+// --- Delete Modal State ---
+const showDeleteModal = ref(false)
+const itemToDelete = ref(null)
+const deletePassword = ref('')
+const deleteError = ref('')
+const isDeleting = ref(false)
+
+// --- Safe Base64 Helpers ---
 function bufferToBase64(buffer) {
   let binary = ''
   const bytes = new Uint8Array(buffer)
@@ -147,12 +154,7 @@ const handleSetup = async () => {
   }
 
   try {
-    const initialData = {
-      items: [
-        { id: 1, title: 'Chase Savings', type: 'Bank', details: '•••• 4829', value: '$24,500', icon: 'business-outline' },
-        { id: 2, title: 'Life Insurance', type: 'Insurance', details: 'Policy #••••91', value: '$500,000', icon: 'shield-half-outline' }
-      ]
-    }
+    const initialData = { items: [] }
 
     const encryptedPackage = await encryptVault(vaultPassword.value, initialData)
     const token = localStorage.getItem('access_token')
@@ -168,6 +170,57 @@ const handleSetup = async () => {
   } catch (error) {
     errorMessage.value = 'Failed to setup vault. Please try again.'
     console.error("Encryption/Save failed:", error)
+  }
+}
+
+// --- Delete Logic ---
+const promptDelete = (item) => {
+  itemToDelete.value = item
+  showDeleteModal.value = true
+  deleteError.value = ''
+}
+
+const cancelDelete = () => {
+  showDeleteModal.value = false
+  itemToDelete.value = null
+  deletePassword.value = ''
+}
+
+const confirmDelete = async () => {
+  if (!deletePassword.value) {
+    deleteError.value = 'Password required to re-encrypt the vault.'
+    return
+  }
+  
+  isDeleting.value = true
+  deleteError.value = ''
+  
+  try {
+    // 1. Filter out the item you want to delete
+    const updatedItems = vaultItems.value.filter(i => i.id !== itemToDelete.value.id)
+    
+    // 2. Re-encrypt the new array without the deleted item
+    const encryptedPackage = await encryptVault(deletePassword.value, { items: updatedItems })
+    encryptedPackage.item_count = updatedItems.length
+    const token = localStorage.getItem('access_token')
+    
+    // 3. Save the newly encrypted package back to Django
+    await axios.post('http://127.0.0.1:8000/api/vault/', encryptedPackage, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+
+    // 4. Update the UI
+    vaultItems.value = updatedItems
+    
+    // 5. Update the local encrypted payload so subsequent deletes/adds don't use stale data
+    encryptedPayload.value = encryptedPackage
+    
+    cancelDelete() // Close modal and clear password
+  } catch (error) {
+    deleteError.value = 'Incorrect Vault Password or network error.'
+    console.error("Deletion failed:", error)
+  } finally {
+    isDeleting.value = false
   }
 }
 </script>
@@ -236,24 +289,66 @@ const handleSetup = async () => {
       <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div v-for="item in vaultItems" :key="item.id" class="bg-[#12141c] border border-gray-800 rounded-2xl p-6 shadow-lg flex flex-col justify-between h-40 hover:border-gray-700 transition-colors">
           
-          <div class="flex items-start space-x-4">
-            <div class="bg-[#1A1C23] p-3 rounded-xl text-[#E5B869] flex items-center justify-center">
-              <ion-icon v-if="item.icon" :name="item.icon" class="text-2xl"></ion-icon>
-              <ion-icon v-else name="folder-outline" class="text-2xl"></ion-icon>
+          <div class="flex justify-between items-start w-full">
+            <div class="flex items-start space-x-4">
+              <div class="bg-[#1A1C23] p-3 rounded-xl text-[#E5B869] flex items-center justify-center">
+                <ion-icon v-if="item.icon" :name="item.icon" class="text-2xl"></ion-icon>
+                <ion-icon v-else name="folder-outline" class="text-2xl"></ion-icon>
+              </div>
+              
+              <div>
+                <h3 class="text-lg font-bold text-white">{{ item.title }}</h3>
+                <p class="text-sm text-gray-500">{{ item.type }}</p>
+              </div>
             </div>
             
-            <div>
-              <h3 class="text-lg font-bold text-white">{{ item.title }}</h3>
-              <p class="text-sm text-gray-500">{{ item.type }}</p>
-            </div>
+            <button @click.stop="promptDelete(item)" class="text-gray-500 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-500/10">
+              <ion-icon name="trash-outline" class="text-xl"></ion-icon>
+            </button>
           </div>
 
           <div class="flex justify-between items-end mt-4">
             <p class="text-sm text-gray-400 font-mono">{{ item.details }}</p>
-            <p class="text-lg font-bold text-[#E5B869]">{{ item.value }}</p>
+            <p v-if="item.value" class="text-lg font-bold text-[#E5B869]">{{ item.value }}</p>
           </div>
           
         </div>
+      </div>
+    </div>
+
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div class="bg-[#12141c] border border-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+        <div class="flex items-center gap-3 text-red-500 mb-4">
+          <ion-icon name="warning-outline" class="text-3xl"></ion-icon>
+          <h3 class="text-xl font-bold">Delete Asset</h3>
+        </div>
+        
+        <p class="text-gray-300 mb-6">
+          Are you sure you want to permanently delete <strong class="text-white">{{ itemToDelete?.title }}</strong>? 
+          You must enter your vault password to re-encrypt your data.
+        </p>
+        
+        <form @submit.prevent="confirmDelete" class="space-y-4">
+          <input 
+            v-model="deletePassword" 
+            type="password" 
+            placeholder="Enter Vault Password"
+            required
+            class="w-full p-3 border border-gray-700 rounded-md bg-background text-foreground text-center tracking-widest focus:border-red-500 focus:ring-1 focus:ring-red-500 transition"
+          />
+          
+          <p v-if="deleteError" class="text-red-500 text-sm font-medium text-center">{{ deleteError }}</p>
+          
+          <div class="flex gap-4 mt-6">
+            <button type="button" @click="cancelDelete" class="flex-1 px-4 py-3 rounded-xl font-bold text-gray-300 bg-gray-800 hover:bg-gray-700 transition">
+              Cancel
+            </button>
+            <button type="submit" :disabled="isDeleting" class="flex-1 px-4 py-3 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 transition flex items-center justify-center gap-2 disabled:opacity-50">
+              <ion-icon v-if="isDeleting" name="sync-outline" class="animate-spin"></ion-icon>
+              <span>{{ isDeleting ? 'Deleting...' : 'Delete Permanently' }}</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 

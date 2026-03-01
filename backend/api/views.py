@@ -13,6 +13,7 @@ from rest_framework import status
 from .models import Vault
 from .serializers import VaultSerializer
 from rest_framework.views import APIView
+from .models import Vault, Letter, Executor
 
 User = get_user_model()
 
@@ -48,33 +49,33 @@ class LoginView(TokenObtainPairView):
     serializer_class = CustomLoginSerializer
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated]) # Security is BACK ON.
+@permission_classes([IsAuthenticated])
 def dashboard_stats(request):
-    # 1. Grab the REAL user that made the request
     user = request.user
     
-    # Grab the exact full_name field from your custom models.py
-    full_name = user.full_name
+    # 1. Get real Vault count
+    try:
+        vault = Vault.objects.get(user=user)
+        vault_count = vault.item_count
+    except Vault.DoesNotExist:
+        vault_count = 0
+        
+    # 2. Get real Letter count
+    letter_count = Letter.objects.filter(user=user).count()
     
-    # Calculate their last check-in using Django's built-in auth fields
+    # 3. Check if they have at least one active or pending Executor
+    has_exec = Executor.objects.filter(user=user).exists()
+    
+    # Calculate Completion Score dynamically based on their progress!
+    completion_score = 10 # Base score for signing up
+    if vault_count > 0: completion_score += 40
+    if letter_count > 0: completion_score += 20
+    if has_exec: completion_score += 30
+    
+    # Format the user's name gracefully
+    full_name = user.full_name if hasattr(user, 'full_name') and user.full_name else user.username
     last_seen_date = user.last_login or user.date_joined
     last_check_in = last_seen_date.strftime("%b %d, %Y") if last_seen_date else "Just now"
-
-    # ------------------------------------------------------------------
-    # 2. REAL DATABASE QUERIES (For when you create the other models)
-    # Once you build your Vault/Letter models, uncomment these lines!
-    # ------------------------------------------------------------------
-    # vault_count = VaultItem.objects.filter(user=user).count()
-    # letter_count = Letter.objects.filter(user=user).count()
-    # has_exec = Executor.objects.filter(user=user, status='Active').exists()
-    
-    # Setting these to 0 for now since the models don't exist yet.
-    vault_count = 0
-    letter_count = 0
-    has_exec = False
-    
-    # Base score of 10% just for creating an account!
-    completion_score = 10 
 
     return Response({
         "fullname": full_name,
